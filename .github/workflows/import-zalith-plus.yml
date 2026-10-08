@@ -1,0 +1,90 @@
+name: Import Zalith Launcher 2 Plus source
+
+on:
+  push:
+    branches:
+      - zalith-plus-import
+
+permissions:
+  contents: write
+
+jobs:
+  import-source:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Cryonix V4
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch Zalith Launcher 2 Plus
+        run: git clone --depth 1 https://github.com/Star1xr/ZalithLauncher2Plus.git /tmp/zalith-plus
+
+      - name: Import source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete --exclude='.git/' --exclude='*.jks' --exclude='.github/workflows/' /tmp/zalith-plus/ ./
+          find . -type f -name '*.jks' -delete
+
+      - name: Write Cryonix V4 Plus README
+        shell: bash
+        run: |
+          cat > README.md <<'EOF'
+# Cryonix Launcher V4 Plus
+
+Unofficial modified version of open-source launcher code.
+
+Cryonix Launcher V4 Plus incorporates source from the archived Star1xr/ZalithLauncher2Plus project and its upstream ZalithLauncher/ZalithLauncher2 project.
+
+## Included foundation
+- Jetpack Compose / Material 3 launcher UI
+- Minecraft Java Edition launcher engine
+- Version management
+- Accounts and offline-account support from the imported source
+- Renderer/plugin infrastructure
+- Input mapping
+- Layer controller
+- Terracotta support
+- Existing Zalith Launcher 2 Plus improvements
+
+## Important
+This is an unofficial modified version and is not affiliated with or endorsed by the Zalith Launcher project.
+
+Copyright and license notices from the upstream projects are preserved. This project is distributed under GPL-3.0 where applicable.
+
+## Source attribution
+- Zalith Launcher 2: https://github.com/ZalithLauncher/ZalithLauncher2
+- Zalith Launcher 2 Plus source used for this import: https://github.com/Star1xr/ZalithLauncher2Plus
+
+## Cryonix changes
+Cryonix-specific UI, branding, launcher features and future V4 Plus changes will be maintained on top of this imported foundation.
+EOF
+
+      - name: Record import source
+        shell: bash
+        run: |
+          cat > CRYONIX_UPSTREAM.md <<'EOF'
+# Cryonix V4 Plus upstream source
+
+This repository imports the source tree of:
+https://github.com/Star1xr/ZalithLauncher2Plus
+
+That project is GPL-3.0 and is itself derived from:
+https://github.com/ZalithLauncher/ZalithLauncher2
+
+The imported source is retained as an upstream foundation for Cryonix Launcher V4 Plus. Original copyright notices and applicable license files must remain with the corresponding source.
+
+Signing keystore files (*.jks) are intentionally excluded from the import. Cryonix should use its own development/release signing keys.
+EOF
+
+      - name: Commit imported source
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then echo 'No changes to commit.'; exit 0; fi
+          git commit -m 'Import Zalith Launcher 2 Plus foundation for Cryonix V4'
+          git push

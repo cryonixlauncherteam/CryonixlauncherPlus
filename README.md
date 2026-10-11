@@ -1,110 +1,92 @@
+<H1 align="center">MojoLauncher (a.k.a. MJLauncher)</H1>
 
-# Zalith Launcher 2+ (PLUS)
+<a href="./README_RU.md">Readme на русском</a>
 
-[**「English」**](./README.md) | [中文（简体）](./README_ZH_CN.md) | [中文（台灣）](./README_ZH_TW.md) | [Türkçe](./README_TR.md)
+<img src="./app_mojo/src/main/assets/mojo.png" align="left" width="150" height="150" alt="MojoLauncher logo">
 
-> **⚠️ UNOFFICIAL MODIFIED VERSION**
-> 
-> This is an unofficial fork of [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2). This project is **not affiliated with or endorsed by the official Zalith Launcher project**.
+[![Android CI](https://github.com/MojoLauncher/MojoLauncher/workflows/Android%20CI/badge.svg)](https://github.com/MojoLauncher/MojoLauncher/actions)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MojoLauncher/MojoLauncher)](https://github.com/MojoLauncher/MojoLauncher/actions)
+[![Discord](https://img.shields.io/discord/1365346109131722753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/VHdwQFsaGX)
 
-**Zalith Launcher 2+** is a community-modified launcher for **Android devices** tailored for [Minecraft: Java Edition](https://www.minecraft.net/). It builds upon the foundation of [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2), utilizing [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/app_pojavlauncher/src/main/jni) as its core launching engine with a modern UI built using **Jetpack Compose** and **Material Design 3**.
+* MojoLauncher is a launcher, based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher), that allows you to play Minecraft: Java Edition on your Android device!
 
-## Some Statistics
+* It can run almost every version of Minecraft, allowing you to use .jar only installers to install modloaders such as [Forge](https://files.minecraftforge.net/) and [Fabric](http://fabricmc.net/) and mods like [OptiFine](https://optifine.net).
 
-July 14, 2026:
-Excluding merges, 3 authors have pushed 265 commits to main and 266 commits to all branches.
+## Navigation
+- [Introduction](#introduction)
+- [Getting MojoLauncher](#getting-mojolauncher)
+- [Building](#building) 
+- [Current roadmap](#current-roadmap) 
+- [License](#license) 
+- [Contributing](#contributing) 
+- [Credits & Third party components and their licenses](#credits--third-party-components-and-their-licenses-if-available)
 
-On main, 288 files have changed and there have been 10.634 additions and 3.095 deletions
+## Introduction 
+* MojoLauncher is a Minecraft: Java Edition launcher for Android based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
+* This launcher can launch almost all available Minecraft versions ranging from rd-132211 to 26.x snapshots (including Combat Test versions). 
+* Modding via Forge and Fabric are also supported. 
 
-## 📋 What's New in This Fork?
+## Getting MojoLauncher
 
-This fork aims to enhance and customize the original Zalith Launcher 2 experience. Some key improvements include:
+You can get MojoLauncher via four methods:
 
-- [x] Cape system
-- [x] Fixes
-- [x] Offline accounts
-- [x] Chroma names
-- [x] Shortcuts in main screen
-- [x] Importing/exporting settings
-- [x] Importing/exporting accounts along with capes and skins, chroma names
-- [x] Implemented mobileglues with config
-- [x] Config UI remake
+1. You can get the prebuilt app from the [releases section](http://github.com/mojolauncher/mojolauncher/releases).
 
-more that i cant count...
+2. You can get it from Google Play by clicking on this badge:
+[![Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=git.artdeell.mjlaunch)
 
+3. You can get early builds from [Github Actions](http://github.com/mojolauncher/mojolauncher/actions).
 
-## 🔗 Upstream Project
-
-This project is derived from the excellent work of the Zalith Launcher team:
-- **Original Project:** [ZalithLauncher2](https://github.com/ZalithLauncher/ZalithLauncher2)
-- **Original License:** GPL-3.0
-
-Please visit the upstream project if you want the official, unmodified version.
-
-## 🌐 Language and Translation Support
-
-This fork uses translations of Zalith Launcher 2. To contribute translations or improvements, please consider contributing upstream to the [Zalith Launcher 2 Weblate project](https://hosted.weblate.org/projects/zalithlauncher2).
-
-## 📦 Build Instructions (For Developers)
-
-### Requirements
-
-* Android Studio **Bumblebee** or newer
-* Android SDK:
-  * **Minimum API level**: 26
-  * **Target API level**: 35
-* JDK 11
-
-### Build Steps
-
-```bash
-git clone https://github.com/Star1xr/ZalithLauncher2Plus.git
-# Open the project in Android Studio and build
+4. You can [build](#building) from source.
+## Building   
+* Build the launcher (it will automatically download all required components)
 ```
+./gradlew :app_mojo:assembleDebug
+```
+If you are building on Windows:
+* Replace `./gradlew` with `.\gradlew.bat`
+* Make sure `mojoexec`, `sdl`, `glfw` are symlinked into `app_pojavlauncher/src/main/jni/`
 
-## 📜 License
+## Current roadmap
+- [x] Instance system in favor of profiles
+- [x] Out-of-the box 1.21.5 support
+- [x] mrpack/CurseForge zip import
+- [x] LTW: enable compute shader/image extensions
+- [ ] LTW: resolve issues with Create
+- [ ] LTW: switch to a color-renderable format for framebuffers
+- [ ] Modpack/mod management tool
+- [ ] MMC-compatible instance import
+- [ ] Vintage Story support
+- [ ] Implement common native library standard
 
-This project is licensed under the **[GPL-3.0 license](LICENSE)**, inherited from the upstream Zalith Launcher 2 project.
+## Known Issues
+- Some physical mice may have very slow mouse speed
+- On Holy GL4ES, large texture atlases may be distorted (resulting in stretched/blocky textures in modpacks)
+- Probably more, that's why we have a bug tracker ;) 
 
-### Important Terms
+## License
+- MojoLauncher is licensed under [GNU LGPLv3](https://github.com/MojoLauncher/MojoLauncher/blob/v3_openjdk/LICENSE).
 
-**Contributions and Attribution**
-   - All modifications are clearly documented and attributed to this fork
-   - The upstream project is properly credited
+## Contributing
+Contributions are welcome! We welcome any type of contribution, not only code. For example, you can help the wiki shape up. You can help the [translation](https://crowdin.com/project/pojavlauncher) too!
 
-## 📦 Open Source Libraries and Licenses
 
-This project inherits all dependencies from Zalith Launcher 2. Please refer to the original project's [README](https://github.com/ZalithLauncher/ZalithLauncher2/blob/main/README.md) for the complete list of open source libraries and their licenses.
+Any code change to this repository should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
 
-## 🤝 Contributing
-
-This is a community fork. Before contributing:
-
-1. Review the [CONTRIBUTING.md](./CONTRIBUTING.md) guidelines
-2. Check existing issues and pull requests
-3. Follow the code style and conventions
-4. Document your changes clearly
-
-## ⚠️ Support and Disclaimers
-
-- This is an **unofficial fork**. Official support should be sought from the [upstream Zalith Launcher 2 project](https://github.com/ZalithLauncher/ZalithLauncher2)
-- Please report bugs to this repository's issue tracker
-- For upstream-related issues, consider reporting to the original project first
-- Use at your own risk. This fork comes with no official warranty or support
-
-## 🔒 Security and Privacy
-
-- Always download from this official repository
-- Be cautious of third-party websites claiming to distribute this software
-- Protect your personal information and credentials
-- Report security issues responsibly through the issue tracker
-
-## 📞 Contact & Links
-
-- **Original Project:** https://github.com/ZalithLauncher/ZalithLauncher2
-- **This Fork:** https://github.com/Star1xr/ZalithLauncher2Plus
-
----
-
-**Zalith Launcher 2** is the original project created and maintained by the Zalith Launcher team.  
-**Zalith Launcher 2+** is an unofficial community fork created to provide enhanced features and modifications.
+## Third party components, licenses and sources (when applicable)
+- [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GNU LGPLv3 License](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
+- Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
+- [Holy GL4ES](https://github.com/artdeell/gl4es_extra_extra/): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).<br>
+- [OpenJDK](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).<br>
+- [GLFW](https://github.com/MojoLauncher/glfw): [zlib license](https://github.com/MojoLauncher/glfw/blob/glfw34/LICENSE.md)
+- [SDL](https://github.com/MojoLauncher/MojoSDL): [zlib license](https://github.com/MojoLauncher/MojoSDL/blob/main/LICENSE.txt)
+- [LWJGL2-GLFW](https://github.com/MojoLauncher/lwjgl2-glfw): 3-Clause BSD license
+- [LWJGL3](https://github.com/LWJGL/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
+- [mojoexec](https://github.com/MojoLauncher/mojoexec): [MIT License](https://github.com/MojoLauncher/mojoexec/blob/master/LICENSE)
+- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
+- [pro-grade](https://github.com/pro-grade/pro-grade) (Java sandboxing security manager): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
+- [bhook](https://github.com/bytedance/bhook) (Used for exit code trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
+- [Authlib-Injector](https://github.com/yushijinhun/authlib-injector) (Used for authorisation via ely.by): [AGPL-3.0](https://github.com/yushijinhun/authlib-injector/blob/develop/LICENSE).
+- [alsoft](https://github.com/kcat/openal-soft/) (Audio output library): [GNU LIBRARY GENERAL PUBLIC LICENSE](https://github.com/kcat/openal-soft/blob/master/COPYING) and [modified PFFFT](https://github.com/kcat/openal-soft/blob/master/LICENSE-pffft).
+- [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
+- Thanks to [Mineskin](https://mineskin.eu/) for providing Minecraft avatars.

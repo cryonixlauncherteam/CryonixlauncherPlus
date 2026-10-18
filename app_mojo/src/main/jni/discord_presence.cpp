@@ -3,7 +3,6 @@
 #include <atomic>
 #include <chrono>
 #include <cstdint>
-#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -14,42 +13,40 @@
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 
 #ifdef CRYONIX_HAS_DISCORD_SDK
-#include "discordpp.h"
+#include "cdiscord.h"
 namespace {
 std::mutex g_mutex;
-std::shared_ptr<discordpp::Client> g_client;
+Discord_Client g_client{};
+bool g_clientInitialized = false;
 std::atomic<bool> g_callbackPumpStarted{false};
-std::atomic<bool> g_callbackPumpRunning{true};
-std::thread g_callbackPump;
+
+Discord_String stringRef(const std::string& value) {
+    return Discord_String{reinterpret_cast<uint8_t*>(const_cast<char*>(value.data())), value.size()};
+}
+
+void freeCallbackData(void*) {}
+void onPresenceUpdated(Discord_ClientResult*, void*) {
+    LOGI("Discord Rich Presence update callback received");
+}
 
 void startCallbackPump() {
     bool expected = false;
     if (!g_callbackPumpStarted.compare_exchange_strong(expected, true)) return;
-    g_callbackPump = std::thread([] {
-        while (g_callbackPumpRunning.load()) {
-            try { discordpp::RunCallbacks(); }
-            catch (...) { LOGW("Discord callback pump caught an exception"); }
+    std::thread([] {
+        for (;;) {
+            Discord_RunCallbacks();
             std::this_thread::sleep_for(std::chrono::milliseconds(16));
         }
-    });
-    g_callbackPump.detach();
+    }).detach();
 }
 
 bool ensureClient(uint64_t applicationId) {
-    if (!g_client) {
-        try {
-            g_client = std::make_shared<discordpp::Client>();
-            g_client->SetApplicationId(applicationId);
-            LOGI("Discord Social SDK client initialized for app %llu", static_cast<unsigned long long>(applicationId));
-        } catch (const std::exception& e) {
-            LOGW("Discord Social SDK initialization failed: %s", e.what());
-            g_client.reset();
-            return false;
-        } catch (...) {
-            LOGW("Discord Social SDK initialization failed");
-            g_client.reset();
-            return false;
-        }
+    if (!g_clientInitialized) {
+        Discord_Client_Init(&g_client);
+        Discord_Client_SetApplicationId(&g_client, applicationId);
+        g_clientInitialized = true;
+        LOGI("Discord Social SDK C client initialized for app %llu",
+             static_cast<unsigned long long>(applicationId));
     }
     startCallbackPump();
     return true;
@@ -59,25 +56,29 @@ void publishPresence(uint64_t applicationId, const std::string& details,
                      const std::string& state, uint64_t startTimestampMs) {
     std::lock_guard<std::mutex> lock(g_mutex);
     if (!ensureClient(applicationId)) return;
-    try {
-        discordpp::Activity activity;
-        activity.SetType(discordpp::ActivityTypes::Playing);
-        activity.SetName("CryonixlauncherPlus");
-        activity.SetDetails(details);
-        activity.SetState(state);
-        activity.SetSupportedPlatforms(discordpp::ActivityGamePlatforms::Android);
-        discordpp::ActivityTimestamps timestamps;
-        timestamps.SetStart(startTimestampMs);
-        activity.SetTimestamps(timestamps);
-        g_client->UpdateRichPresence(std::move(activity), [](discordpp::ClientResult result) {
-            if (result.Successful()) LOGI("Discord Rich Presence update succeeded");
-            else LOGW("Discord Rich Presence update failed: %s", result.Error().c_str());
-        });
-    } catch (const std::exception& e) {
-        LOGW("Could not publish Discord Rich Presence: %s", e.what());
-    } catch (...) {
-        LOGW("Could not publish Discord Rich Presence");
-    }
+
+    Discord_Activity activity{};
+    Discord_ActivityTimestamps timestamps{};
+    Discord_Activity_Init(&activity);
+    Discord_ActivityTimestamps_Init(&timestamps);
+
+    const std::string appName = "CryonixlauncherPlus";
+    Discord_String nameValue = stringRef(appName);
+    Discord_String detailsValue = stringRef(details);
+    Discord_String stateValue = stringRef(state);
+
+    Discord_Activity_SetType(&activity, Discord_ActivityTypes_Playing);
+    Discord_Activity_SetName(&activity, nameValue);
+    Discord_Activity_SetDetails(&activity, &detailsValue);
+    Discord_Activity_SetState(&activity, &stateValue);
+    Discord_ActivityTimestamps_SetStart(&timestamps, startTimestampMs);
+    Discord_Activity_SetTimestamps(&activity, &timestamps);
+    Discord_Activity_SetSupportedPlatforms(&activity, Discord_ActivityGamePlatforms_Android);
+
+    Discord_Client_UpdateRichPresence(&g_client, &activity, onPresenceUpdated, freeCallbackData, nullptr);
+
+    Discord_ActivityTimestamps_Drop(&timestamps);
+    Discord_Activity_Drop(&activity);
 }
 
 std::string fromJava(JNIEnv* env, jstring value, const char* fallback) {
@@ -110,7 +111,7 @@ Java_git_artdeell_mojo_DiscordPresenceManager_nativeStart(
                     fromJava(env, state, "Launcher is ready"), static_cast<uint64_t>(startTimestampMs));
 #else
     (void) applicationId; (void) startTimestampMs;
-    LOGW("Discord Rich Presence is unavailable for this ABI; SDK library is not bundled");
+    LOGW("Discord Rich Presence unavailable: SDK library is not bundled for this ABI");
 #endif
 }
 

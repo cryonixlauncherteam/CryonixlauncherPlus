@@ -60,6 +60,8 @@ jobs:
           unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
           echo "=== Java RPC public signatures ==="
           javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient com.discord.socialsdk.DiscordSocialSdkInit com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection || true
+      - name: Stop after Discord SDK API inspection
+        run: exit 0
       - name: Create out directory
         run: mkdir out
       - name: Build Publishing .aab

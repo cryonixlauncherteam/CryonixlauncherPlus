@@ -74,20 +74,12 @@ add_library(awt_xawt SHARED
 target_link_libraries(awt_xawt PRIVATE awt_headless)
 
 # ------ Cryonix Launcher Discord Rich Presence ------
-# The Gradle helper extracts the SDK headers/native library from the local AAR.
+# The AAR currently available in this project exposes the Android Java/RPC
+# bridge, but its libdiscord_partner_sdk.so does not export the public C++
+# discordpp::Client / Activity symbols. Linking the C++ API here therefore
+# fails with undefined-symbol errors. Keep the JNI bridge target buildable
+# using discord_presence.cpp's explicit unavailable-SDK fallback until the
+# SDK is integrated through its supported Android Java/RPC entry point.
 add_library(cryonix_discord_presence SHARED discord_presence.cpp)
 set_target_properties(cryonix_discord_presence PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES)
 target_link_libraries(cryonix_discord_presence PRIVATE log android)
-
-set(CRYONIX_DISCORD_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/discord_sdk")
-set(CRYONIX_DISCORD_SDK_HEADER "${CRYONIX_DISCORD_SDK_DIR}/include/discordpp.h")
-set(CRYONIX_DISCORD_SDK_LIB "${CRYONIX_DISCORD_SDK_DIR}/${ANDROID_ABI}/libdiscord_partner_sdk.so")
-if(EXISTS "${CRYONIX_DISCORD_SDK_HEADER}" AND EXISTS "${CRYONIX_DISCORD_SDK_LIB}")
-    add_library(discord_partner_sdk SHARED IMPORTED)
-    set_target_properties(discord_partner_sdk PROPERTIES IMPORTED_LOCATION "${CRYONIX_DISCORD_SDK_LIB}")
-    target_include_directories(cryonix_discord_presence PRIVATE "${CRYONIX_DISCORD_SDK_DIR}/include")
-    target_compile_definitions(cryonix_discord_presence PRIVATE CRYONIX_HAS_DISCORD_SDK=1)
-    target_link_libraries(cryonix_discord_presence PRIVATE discord_partner_sdk)
-else()
-    message(WARNING "Cryonix Discord SDK binary is unavailable for ${ANDROID_ABI}; Rich Presence will be disabled for this ABI.")
-endif()

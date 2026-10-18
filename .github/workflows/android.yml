@@ -62,47 +62,56 @@ jobs:
           javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient com.discord.socialsdk.DiscordSocialSdkInit com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection || true
       - name: Stop after Discord SDK API inspection
         run: exit 0
-      - name: Create out directory
+      - if: false
+        name: Create out directory
         run: mkdir out
-      - name: Build Publishing .aab
+      - if: false
+        name: Build Publishing .aab
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
           gradle :app_mojo:bundleFullGplay
           mv app_mojo/build/outputs/bundle/fullGplay/app_mojo-full-gplay.aab out/app-gplay.aab
 
-      - name: Build Debug .apk
+      - if: false
+        name: Build Debug .apk
         run: |
           # Build the launcher
           gradle :app_mojo:assembleFullDebug
           mv app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk out/app-debug-full.apk
 
-      - name: Build Debug .apk (No runtime)
+      - if: false
+        name: Build Debug .apk (No runtime)
         run: |
           gradle :app_mojo:assembleNoruntimeDebug
           mv app_mojo/build/outputs/apk/noruntime/debug/app_mojo-noruntime-debug.apk out/app-debug-noruntime.apk
-      - name: Build Nightly Release .apk
+      - if: false
+        name: Build Nightly Release .apk
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
           gradle :app_mojo:assembleFullPubRelease
           mv app_mojo/build/outputs/apk/full/pubRelease/app_mojo-full-pubRelease.apk out/MojoLauncher-release.apk
-      - name: Gen md5sums
+      - if: false
+        name: Gen md5sums
         run: |
           md5sum out/app-debug-full.apk > out/app-debug-full.md5
           md5sum out/app-debug-noruntime.apk > out/app-debug-noruntime.md5
 
-      - name: Upload Debug APK
+      - if: false
+        name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: out/app-debug-full.apk
 
-      - name: Upload Debug APK (No runtime)
+      - if: false
+        name: Upload Debug APK (No runtime)
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-noruntime
           path: out/app-debug-noruntime.apk
 
-      - name: Release Nightly APK
+      - if: false
+        name: Release Nightly APK
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         uses: softprops/action-gh-release@v3
         with:
@@ -115,13 +124,15 @@ jobs:
           files: |
             out/MojoLauncher-release.apk
 
-      - name: Upload AAB
+      - if: false
+        name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: out/app-gplay.aab
 
-      - name: Upload onto the Google Play testing track
+      - if: false
+        name: Upload onto the Google Play testing track
         continue-on-error: true
         if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         uses: r0adkll/upload-google-play@v1.1.5

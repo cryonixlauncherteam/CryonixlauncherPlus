@@ -3,11 +3,13 @@ package git.artdeell.mojo;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.app.Application;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Process;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -100,6 +102,24 @@ public class MojoApplication extends Application {
 			startActivity(ferrorIntent);
 		}
 	}
+
+    private boolean isLauncherProcess() {
+        String processName = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            processName = Application.getProcessName();
+        } else {
+            ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            if (manager != null) {
+                for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+                    if (process.pid == Process.myPid()) {
+                        processName = process.processName;
+                        break;
+                    }
+                }
+            }
+        }
+        return processName != null && (processName.equals(getPackageName()) || processName.endsWith(":launcher"));
+    }
 
 	@Override
 	public void onTerminate() {

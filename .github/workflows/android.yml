@@ -41,17 +41,6 @@ jobs:
           name: mesa-aar
           path: app_mojo/libs
 
-      - name: Inspect bundled Discord SDK API
-        shell: bash
-        run: |
-          AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
-          unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
-          echo "=== DiscordRpcClient API ==="
-          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient || true
-          echo "=== DiscordSocialSdkInit API ==="
-          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordSocialSdkInit || true
-          echo "=== RPC Binder API ==="
-          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection com.discord.socialsdk.rpc.IDiscordRpcCallback || true
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.14.3"
@@ -61,6 +50,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Inspect Discord SDK API
+        shell: bash
+        run: |
+          AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
+          unzip -p "$AAR" prefab/modules/discord_partner_sdk/include/cdiscord.h > /tmp/cdiscord.h
+          echo "=== C API declarations ==="
+          grep -n -E 'Discord_Client_(Init|SetApplicationId|UpdateRichPresence|ClearRichPresence|RunCallbacks|SetApplicationId)|Discord_Activity|Discord_Timestamps|Discord_ActivityTimestamps|Discord_ClientCreateOptions' /tmp/cdiscord.h | head -180 || true
+          unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
+          echo "=== Java RPC public signatures ==="
+          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient com.discord.socialsdk.DiscordSocialSdkInit com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection || true
       - name: Create out directory
         run: mkdir out
       - name: Build Publishing .aab

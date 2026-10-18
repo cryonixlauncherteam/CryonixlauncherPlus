@@ -71,7 +71,7 @@ void publishPresence(uint64_t applicationId, const std::string& details,
         activity.SetTimestamps(timestamps);
         g_client->UpdateRichPresence(std::move(activity), [](discordpp::ClientResult result) {
             if (result.Successful()) LOGI("Discord Rich Presence update succeeded");
-            else LOGW("Discord Rich Presence update failed: %s", result.Error().c_str());
+            else LOGW("Discord Rich Presence update failed: %s", discordpp::Client::ErrorToString(result.Error()).c_str());
         });
     } catch (const std::exception& e) {
         LOGW("Could not publish Discord Rich Presence: %s", e.what());

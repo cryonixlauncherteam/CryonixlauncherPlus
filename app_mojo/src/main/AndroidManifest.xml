@@ -51,6 +51,7 @@
 
         <activity
             android:name=".TestStorageActivity"
+            android:screenOrientation="landscape"
             android:exported="true"
             android:label="@string/app_short_name"
             android:launchMode="singleTop">
@@ -62,6 +63,7 @@
         </activity>
         <activity
             android:name=".LauncherActivity"
+            android:screenOrientation="landscape"
             android:label="@string/app_short_name"
             android:windowSoftInputMode="adjustResize"/>
         <activity

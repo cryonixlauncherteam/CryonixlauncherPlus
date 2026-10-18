@@ -73,6 +73,8 @@ public class MojoApplication extends Application {
 		
 		try {
 			super.onCreate();
+		// Publish launcher Rich Presence when Discord is installed and signed in.
+		DiscordPresenceManager.start();
 			if(Tools.checkStorageRoot(this)){
 				// Implicitly initializes early constants and storage constants.
 				// Required to run the main activity properly.

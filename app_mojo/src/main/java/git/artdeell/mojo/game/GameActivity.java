@@ -45,6 +45,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.kdt.LoggerView;
 
 import git.artdeell.mojo.BaseActivity;
+import git.artdeell.mojo.DiscordPresenceManager;
 import git.artdeell.mojo.CallbackBridge;
 import git.artdeell.mojo.game.renderer.GameRenderer;
 import git.artdeell.mojo.utils.GpuUtils;
@@ -124,6 +125,7 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
             finish();
             return;
         }
+        DiscordPresenceManager.showGame(this, instance.versionId);
         mGameRenderer = new GameRenderer(instance.getLaunchRenderer());
 
         if(GpuUtils.getGlInfo().isAdreno() && !PREF_ZINK_PREFER_SYSTEM_DRIVER) {
@@ -362,6 +364,7 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
 
     @Override
     protected void onDestroy() {
+        DiscordPresenceManager.showLauncher(this);
         super.onDestroy();
         ContextExecutor.clearActivity();
     }

@@ -41,6 +41,15 @@
         android:networkSecurityConfig="@xml/netconfig"
         android:enableOnBackInvokedCallback="false"
         tools:ignore="UnusedAttribute">
+        <receiver
+            android:name=".DiscordPresenceReceiver"
+            android:exported="false"
+            android:process=":launcher">
+            <intent-filter>
+                <action android:name="git.artdeell.mojo.action.DISCORD_PRESENCE" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MissingStorageActivity"
             android:exported="false" />

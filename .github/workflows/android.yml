@@ -56,7 +56,7 @@ jobs:
           AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
           unzip -p "$AAR" prefab/modules/discord_partner_sdk/include/cdiscord.h > /tmp/cdiscord.h
           echo "=== C API declarations ==="
-          grep -n -E 'Discord_Client_(Init|SetApplicationId|UpdateRichPresence|ClearRichPresence|RunCallbacks|SetApplicationId)|Discord_Activity|Discord_Timestamps|Discord_ActivityTimestamps|Discord_ClientCreateOptions' /tmp/cdiscord.h | head -180 || true
+          grep -n -E 'Discord_Client_(Init|SetApplicationId|UpdateRichPresence|ClearRichPresence|RunCallbacks|Connect|GetStatus)|Discord_ClientCreateOptions_(Init|SetApplicationId|SetApplicationID)|Discord_Activity_(Init|SetName|SetType|SetDetails|SetState|SetTimestamps)|Discord_ActivityTimestamps_(Init|SetStart)|Discord_String|struct Discord_ClientCreateOptions|struct Discord_Client \\{' /tmp/cdiscord.h | tail -180 || true
           unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
           echo "=== Java RPC public signatures ==="
           javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient com.discord.socialsdk.DiscordSocialSdkInit com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection || true

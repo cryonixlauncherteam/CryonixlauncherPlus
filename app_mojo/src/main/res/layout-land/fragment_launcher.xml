@@ -294,7 +294,7 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
                 android:background="@drawable/cryonix_icon_button"
-                android:contentDescription="@string/mcl_option_edit_profile"
+                android:contentDescription="Edit selected instance"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_px_edit"

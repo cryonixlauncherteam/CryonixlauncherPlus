@@ -76,6 +76,7 @@ target_link_libraries(awt_xawt PRIVATE awt_headless)
 # ------ Cryonix Launcher Discord Rich Presence ------
 # The Gradle helper extracts the SDK headers/native library from the local AAR.
 add_library(cryonix_discord_presence SHARED discord_presence.cpp)
+set_target_properties(cryonix_discord_presence PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES)
 target_link_libraries(cryonix_discord_presence PRIVATE log android)
 
 set(CRYONIX_DISCORD_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/discord_sdk")

@@ -1,92 +1,133 @@
-<H1 align="center">MojoLauncher (a.k.a. MJLauncher)</H1>
+<div align="center">
 
-<a href="./README_RU.md">Readme на русском</a>
+<img src="app_mojo/src/main/assets/mojo.png" alt="Cryonix Launcher Plus logo" width="112" />
 
-<img src="./app_mojo/src/main/assets/mojo.png" align="left" width="150" height="150" alt="MojoLauncher logo">
+# ❄️ CRYONIX LAUNCHER PLUS
 
-[![Android CI](https://github.com/MojoLauncher/MojoLauncher/workflows/Android%20CI/badge.svg)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MojoLauncher/MojoLauncher)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![Discord](https://img.shields.io/discord/1365346109131722753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/VHdwQFsaGX)
+<a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=22&pause=1000&color=36A3FF&center=true&vCenter=true&width=620&lines=Your+Minecraft.+Your+World.;A+new+way+to+play+Java+Edition.;Built+for+Android.+Made+for+players." alt="Animated Cryonix Launcher Plus tagline" />
+</a>
 
-* MojoLauncher is a launcher, based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher), that allows you to play Minecraft: Java Edition on your Android device!
+**A Minecraft: Java Edition launcher for Android — reimagined as Cryonix Launcher Plus.**
 
-* It can run almost every version of Minecraft, allowing you to use .jar only installers to install modloaders such as [Forge](https://files.minecraftforge.net/) and [Fabric](http://fabricmc.net/) and mods like [OptiFine](https://optifine.net).
+<p>
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus/releases">
+    <img src="https://img.shields.io/github/downloads/cryonixlauncherteam/CryonixlauncherPlus/total?style=for-the-badge&label=TOTAL%20RELEASE%20DOWNLOADS&color=168BFF" alt="Total GitHub release downloads" />
+  </a>
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus/stargazers">
+    <img src="https://img.shields.io/github/stars/cryonixlauncherteam/CryonixlauncherPlus?style=for-the-badge&color=7C6CFF" alt="GitHub stars" />
+  </a>
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus/commits/main">
+    <img src="https://img.shields.io/github/last-commit/cryonixlauncherteam/CryonixlauncherPlus?style=for-the-badge&color=303846" alt="Last commit" />
+  </a>
+</p>
 
-## Navigation
-- [Introduction](#introduction)
-- [Getting MojoLauncher](#getting-mojolauncher)
-- [Building](#building) 
-- [Current roadmap](#current-roadmap) 
-- [License](#license) 
-- [Contributing](#contributing) 
-- [Credits & Third party components and their licenses](#credits--third-party-components-and-their-licenses-if-available)
+<p>
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus/releases">Get Releases</a> ·
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus/issues">Report a Bug</a> ·
+  <a href="https://github.com/cryonixlauncherteam/CryonixlauncherPlus">Source Code</a>
+</p>
 
-## Introduction 
-* MojoLauncher is a Minecraft: Java Edition launcher for Android based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
-* This launcher can launch almost all available Minecraft versions ranging from rd-132211 to 26.x snapshots (including Combat Test versions). 
-* Modding via Forge and Fabric are also supported. 
+</div>
 
-## Getting MojoLauncher
+---
 
-You can get MojoLauncher via four methods:
+## ✦ About Cryonix Launcher Plus
 
-1. You can get the prebuilt app from the [releases section](http://github.com/mojolauncher/mojolauncher/releases).
+Cryonix Launcher Plus is an Android launcher project based on [MojoLauncher](https://github.com/MojoLauncher/MojoLauncher), itself based on [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher). The project aims to make Minecraft: Java Edition accessible on Android with a distinct Cryonix identity and a clean, practical launcher experience.
 
-2. You can get it from Google Play by clicking on this badge:
-[![Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=git.artdeell.mjlaunch)
+### What it aims to support
 
-3. You can get early builds from [Github Actions](http://github.com/mojolauncher/mojolauncher/actions).
+- Minecraft: Java Edition on compatible Android devices
+- Multiple Minecraft versions and instances
+- Mod-loader workflows, including Fabric and Forge where supported
+- A custom Cryonix Launcher Plus interface and launcher branding
+- Ongoing improvements to usability, compatibility and performance
 
-4. You can [build](#building) from source.
-## Building   
-* Build the launcher (it will automatically download all required components)
+*Available features depend on the current build, device, Minecraft version and required components.*
+
+## 📥 Downloads
+
+<div align="center">
+
+[![Latest Release](https://img.shields.io/github/v/release/cryonixlauncherteam/CryonixlauncherPlus?style=for-the-badge&label=LATEST%20RELEASE&color=168BFF)](https://github.com/cryonixlauncherteam/CryonixlauncherPlus/releases/latest)
+[![Total Downloads](https://img.shields.io/github/downloads/cryonixlauncherteam/CryonixlauncherPlus/total?style=for-the-badge&label=TOTAL%20DOWNLOADS&color=7C6CFF)](https://github.com/cryonixlauncherteam/CryonixlauncherPlus/releases)
+
+</div>
+
+1. Open the [Releases page](https://github.com/cryonixlauncherteam/CryonixlauncherPlus/releases).
+2. Choose a published release and download its Android APK asset, if available.
+3. Install only builds you trust, and make sure your device meets the build's requirements.
+
+**About the download counter:** The badge updates automatically from downloads of files attached to GitHub Releases. This repository currently has no published releases, so the count may show **0** until release assets are published and downloaded. GitHub does not include ordinary source-code ZIP downloads in this release-asset counter.
+
+## 🛠️ Build from source
+
+You will need a compatible JDK, Android SDK and the Android build tools required by the project.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/cryonixlauncherteam/CryonixlauncherPlus.git
+cd CryonixlauncherPlus
 ```
+
+Build the debug APK:
+
+```bash
 ./gradlew :app_mojo:assembleDebug
 ```
-If you are building on Windows:
-* Replace `./gradlew` with `.\gradlew.bat`
-* Make sure `mojoexec`, `sdl`, `glfw` are symlinked into `app_pojavlauncher/src/main/jni/`
 
-## Current roadmap
-- [x] Instance system in favor of profiles
-- [x] Out-of-the box 1.21.5 support
-- [x] mrpack/CurseForge zip import
-- [x] LTW: enable compute shader/image extensions
-- [ ] LTW: resolve issues with Create
-- [ ] LTW: switch to a color-renderable format for framebuffers
-- [ ] Modpack/mod management tool
-- [ ] MMC-compatible instance import
-- [ ] Vintage Story support
-- [ ] Implement common native library standard
+On Windows, use:
 
-## Known Issues
-- Some physical mice may have very slow mouse speed
-- On Holy GL4ES, large texture atlases may be distorted (resulting in stretched/blocky textures in modpacks)
-- Probably more, that's why we have a bug tracker ;) 
+```bat
+gradlew.bat :app_mojo:assembleDebug
+```
 
-## License
-- MojoLauncher is licensed under [GNU LGPLv3](https://github.com/MojoLauncher/MojoLauncher/blob/v3_openjdk/LICENSE).
+The generated APK is normally located under the module's `build/outputs/apk/` directory. Build requirements may change as the project evolves.
 
-## Contributing
-Contributions are welcome! We welcome any type of contribution, not only code. For example, you can help the wiki shape up. You can help the [translation](https://crowdin.com/project/pojavlauncher) too!
+## 🧭 Project direction
 
+- [ ] Continue refining the Cryonix Launcher Plus visual identity
+- [ ] Improve the landscape mobile interface and navigation
+- [ ] Polish button feedback and Motion Bounce animations
+- [ ] Improve instance-management and launcher-screen usability
+- [ ] Keep existing launch, account and game-runtime functionality stable
 
-Any code change to this repository should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
+This list describes project goals, not a guarantee that every item is already implemented.
 
-## Third party components, licenses and sources (when applicable)
-- [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GNU LGPLv3 License](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
-- Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
-- [Holy GL4ES](https://github.com/artdeell/gl4es_extra_extra/): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).<br>
-- [OpenJDK](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).<br>
-- [GLFW](https://github.com/MojoLauncher/glfw): [zlib license](https://github.com/MojoLauncher/glfw/blob/glfw34/LICENSE.md)
-- [SDL](https://github.com/MojoLauncher/MojoSDL): [zlib license](https://github.com/MojoLauncher/MojoSDL/blob/main/LICENSE.txt)
-- [LWJGL2-GLFW](https://github.com/MojoLauncher/lwjgl2-glfw): 3-Clause BSD license
-- [LWJGL3](https://github.com/LWJGL/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
-- [mojoexec](https://github.com/MojoLauncher/mojoexec): [MIT License](https://github.com/MojoLauncher/mojoexec/blob/master/LICENSE)
-- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
-- [pro-grade](https://github.com/pro-grade/pro-grade) (Java sandboxing security manager): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
-- [bhook](https://github.com/bytedance/bhook) (Used for exit code trapping): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-- [Authlib-Injector](https://github.com/yushijinhun/authlib-injector) (Used for authorisation via ely.by): [AGPL-3.0](https://github.com/yushijinhun/authlib-injector/blob/develop/LICENSE).
-- [alsoft](https://github.com/kcat/openal-soft/) (Audio output library): [GNU LIBRARY GENERAL PUBLIC LICENSE](https://github.com/kcat/openal-soft/blob/master/COPYING) and [modified PFFFT](https://github.com/kcat/openal-soft/blob/master/LICENSE-pffft).
-- [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
-- Thanks to [Mineskin](https://mineskin.eu/) for providing Minecraft avatars.
+## 🐛 Issues and contributions
+
+Found a bug or have an idea? Please [open an issue](https://github.com/cryonixlauncherteam/CryonixlauncherPlus/issues) with clear reproduction steps, device details and relevant logs. Contributions should be submitted as pull requests with a description of the change and how it was tested.
+
+## 📜 License and acknowledgements
+
+Cryonix Launcher Plus builds on open-source work. Please review the original licenses and preserve their notices when modifying or redistributing the project.
+
+- [MojoLauncher](https://github.com/MojoLauncher/MojoLauncher)
+- [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher) — GNU LGPLv3
+- [Android Support Libraries](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt) — Apache License 2.0
+- [Holy GL4ES](https://github.com/artdeell/gl4es_extra_extra/) — MIT
+- [OpenJDK multiarch](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u)
+- [GLFW](https://github.com/MojoLauncher/glfw) — zlib
+- [SDL](https://github.com/MojoLauncher/MojoSDL) — zlib
+- [LWJGL](https://github.com/LWJGL/lwjgl3) — BSD-3-Clause
+- [mojoexec](https://github.com/MojoLauncher/mojoexec) — MIT
+- [Mesa 3D](https://docs.mesa3d.org/license.html)
+- [pro-grade](https://github.com/pro-grade/pro-grade) — Apache License 2.0
+- [bhook](https://github.com/bytedance/bhook) — MIT
+- [Authlib-Injector](https://github.com/yushijinhun/authlib-injector)
+- [OpenAL Soft](https://github.com/kcat/openal-soft/)
+- [Oboe](https://github.com/google/oboe) — Apache License 2.0
+
+Minecraft is a trademark of Microsoft/Mojang. Cryonix Launcher Plus is an independent project and is not affiliated with or endorsed by Microsoft or Mojang. Refer to each upstream component for its full license and attribution requirements.
+
+---
+
+<div align="center">
+
+**CRYONIX LAUNCHER PLUS** · Play your way.
+
+<sub>Made with care for the Minecraft community.</sub>
+
+</div>

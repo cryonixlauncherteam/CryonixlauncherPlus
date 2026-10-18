@@ -41,6 +41,28 @@ jobs:
           name: mesa-aar
           path: app_mojo/libs
 
+      - name: Inspect bundled Discord SDK API
+        shell: bash
+        run: |
+          set +e
+          AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
+          echo "=== Discord AAR ==="
+          ls -l "$AAR" || true
+          if [ -f "$AAR" ]; then
+            echo "=== AAR entries ==="
+            unzip -l "$AAR" | head -160
+            echo "=== classes.jar entries ==="
+            unzip -p "$AAR" classes.jar > /tmp/discord-classes.jar
+            if [ -s /tmp/discord-classes.jar ]; then
+              jar tf /tmp/discord-classes.jar | head -240
+            else
+              echo "No classes.jar present"
+            fi
+            echo "=== SDK native exports ==="
+            mkdir -p /tmp/discord-sdk
+            unzip -o "$AAR" 'jni/*/libdiscord_partner_sdk.so' -d /tmp/discord-sdk >/dev/null 2>&1
+            find /tmp/discord-sdk -name '*.so' -print -exec sh -c 'nm -D --defined-only "$1" 2>/dev/null | grep -E "Java_|discordpp|RPC|Presence|Client" | head -160' _ {} ;
+          fi
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.14.3"

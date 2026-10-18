@@ -50,71 +50,48 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Inspect Discord SDK API
-        shell: bash
-        run: |
-          AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
-          unzip -p "$AAR" prefab/modules/discord_partner_sdk/include/cdiscord.h > /tmp/cdiscord.h
-          echo "=== C API declarations ==="
-          echo "=== Client and activity C API structs ==="
-          sed -n '380,405p;1270,1345p;1745,1825p' /tmp/cdiscord.h
-
-          unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
-          echo "=== Java RPC public signatures ==="
-          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient com.discord.socialsdk.DiscordSocialSdkInit com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection || true
-      - name: Stop after Discord SDK API inspection
-        run: exit 0
       - name: Create out directory
-        if: ${{ false }}
         run: mkdir out
       - name: Build Publishing .aab
-        if: ${{ false }}
-
+        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
           gradle :app_mojo:bundleFullGplay
           mv app_mojo/build/outputs/bundle/fullGplay/app_mojo-full-gplay.aab out/app-gplay.aab
 
       - name: Build Debug .apk
-        if: ${{ false }}
         run: |
           # Build the launcher
           gradle :app_mojo:assembleFullDebug
           mv app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk out/app-debug-full.apk
 
       - name: Build Debug .apk (No runtime)
-        if: ${{ false }}
         run: |
           gradle :app_mojo:assembleNoruntimeDebug
           mv app_mojo/build/outputs/apk/noruntime/debug/app_mojo-noruntime-debug.apk out/app-debug-noruntime.apk
       - name: Build Nightly Release .apk
-        if: ${{ false }}
-
+        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         run: |
           gradle :app_mojo:assembleFullPubRelease
           mv app_mojo/build/outputs/apk/full/pubRelease/app_mojo-full-pubRelease.apk out/MojoLauncher-release.apk
       - name: Gen md5sums
-        if: ${{ false }}
         run: |
           md5sum out/app-debug-full.apk > out/app-debug-full.md5
           md5sum out/app-debug-noruntime.apk > out/app-debug-noruntime.md5
 
       - name: Upload Debug APK
-        if: ${{ false }}
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: out/app-debug-full.apk
 
       - name: Upload Debug APK (No runtime)
-        if: ${{ false }}
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-noruntime
           path: out/app-debug-noruntime.apk
 
       - name: Release Nightly APK
-        if: ${{ false }}
-
+        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         uses: softprops/action-gh-release@v3
         with:
           name: MojoLauncher Nightly Builds
@@ -127,16 +104,14 @@ jobs:
             out/MojoLauncher-release.apk
 
       - name: Upload AAB
-        if: ${{ false }}
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: out/app-gplay.aab
 
       - name: Upload onto the Google Play testing track
-        if: ${{ false }}
         continue-on-error: true
-
+        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
         uses: r0adkll/upload-google-play@v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_JSON }}

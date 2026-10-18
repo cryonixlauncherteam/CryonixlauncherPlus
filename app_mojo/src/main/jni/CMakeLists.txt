@@ -72,3 +72,21 @@ add_library(awt_xawt SHARED
         awt_xawt/xawt_fake.c
 )
 target_link_libraries(awt_xawt PRIVATE awt_headless)
+
+# ------ Cryonix Launcher Discord Rich Presence ------
+# The Gradle helper extracts the SDK headers/native library from the local AAR.
+add_library(cryonix_discord_presence SHARED discord_presence.cpp)
+target_link_libraries(cryonix_discord_presence PRIVATE log android)
+
+set(CRYONIX_DISCORD_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/discord_sdk")
+set(CRYONIX_DISCORD_SDK_HEADER "${CRYONIX_DISCORD_SDK_DIR}/include/discordpp.h")
+set(CRYONIX_DISCORD_SDK_LIB "${CRYONIX_DISCORD_SDK_DIR}/${ANDROID_ABI}/libdiscord_partner_sdk.so")
+if(EXISTS "${CRYONIX_DISCORD_SDK_HEADER}" AND EXISTS "${CRYONIX_DISCORD_SDK_LIB}")
+    add_library(discord_partner_sdk SHARED IMPORTED)
+    set_target_properties(discord_partner_sdk PROPERTIES IMPORTED_LOCATION "${CRYONIX_DISCORD_SDK_LIB}")
+    target_include_directories(cryonix_discord_presence PRIVATE "${CRYONIX_DISCORD_SDK_DIR}/include")
+    target_compile_definitions(cryonix_discord_presence PRIVATE CRYONIX_HAS_DISCORD_SDK=1)
+    target_link_libraries(cryonix_discord_presence PRIVATE discord_partner_sdk)
+else()
+    message(WARNING "Cryonix Discord SDK binary is unavailable for ${ANDROID_ABI}; Rich Presence will be disabled for this ABI.")
+endif()

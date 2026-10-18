@@ -74,12 +74,16 @@ add_library(awt_xawt SHARED
 target_link_libraries(awt_xawt PRIVATE awt_headless)
 
 # ------ Cryonix Launcher Discord Rich Presence ------
-# The AAR currently available in this project exposes the Android Java/RPC
-# bridge, but its libdiscord_partner_sdk.so does not export the public C++
-# discordpp::Client / Activity symbols. Linking the C++ API here therefore
-# fails with undefined-symbol errors. Keep the JNI bridge target buildable
-# using discord_presence.cpp's explicit unavailable-SDK fallback until the
-# SDK is integrated through its supported Android Java/RPC entry point.
+# The Social SDK AAR provides the supported C API and Android RPC transport.
+# Its native libraries are available only for ARM ABIs; other ABIs build a safe no-op bridge.
+set(DISCORD_SDK_LIB "${CMAKE_CURRENT_SOURCE_DIR}/discord_sdk/${CMAKE_ANDROID_ARCH_ABI}/libdiscord_partner_sdk.so")
 add_library(cryonix_discord_presence SHARED discord_presence.cpp)
 set_target_properties(cryonix_discord_presence PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES)
 target_link_libraries(cryonix_discord_presence PRIVATE log android)
+if(EXISTS "${DISCORD_SDK_LIB}")
+    add_library(discord_partner_sdk SHARED IMPORTED)
+    set_target_properties(discord_partner_sdk PROPERTIES IMPORTED_LOCATION "${DISCORD_SDK_LIB}")
+    target_include_directories(cryonix_discord_presence PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/discord_sdk/include")
+    target_compile_definitions(cryonix_discord_presence PRIVATE CRYONIX_HAS_DISCORD_SDK=1)
+    target_link_libraries(cryonix_discord_presence PRIVATE discord_partner_sdk)
+endif()

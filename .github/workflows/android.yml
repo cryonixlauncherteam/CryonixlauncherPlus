@@ -44,25 +44,14 @@ jobs:
       - name: Inspect bundled Discord SDK API
         shell: bash
         run: |
-          set +e
           AAR=app_mojo/libs/discord_partner_sdk_arm_only.aar
-          echo "=== Discord AAR ==="
-          ls -l "$AAR" || true
-          if [ -f "$AAR" ]; then
-            echo "=== SDK Java classes ==="
-            unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
-            if [ -s /tmp/discord-classes.jar ]; then
-              jar tf /tmp/discord-classes.jar | head -240
-              echo "=== Public SDK signatures ==="
-              jar tf /tmp/discord-classes.jar | grep '\\.class$' | grep -E 'Client|Activity|RPC|Presence|Discord' | head -100 | sed 's#/#.#g;s#\\.class$##' | while read cls; do javap -classpath /tmp/discord-classes.jar -public "$cls" 2>/dev/null | head -80; done
-            else
-              echo "No SDK Java jar present"
-            fi
-            echo "=== SDK native exports ==="
-            mkdir -p /tmp/discord-sdk
-            unzip -o "$AAR" 'jni/*/libdiscord_partner_sdk.so' -d /tmp/discord-sdk >/dev/null 2>&1
-            find /tmp/discord-sdk -name '*.so' -print | while read lib; do echo "--- $lib"; nm -D --defined-only "$lib" 2>/dev/null | grep -E 'Java_|discordpp|RPC|Presence|Client' | head -120; done
-          fi
+          unzip -p "$AAR" libs/discord_partner_sdk.jar > /tmp/discord-classes.jar
+          echo "=== DiscordRpcClient API ==="
+          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordRpcClient || true
+          echo "=== DiscordSocialSdkInit API ==="
+          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.DiscordSocialSdkInit || true
+          echo "=== RPC Binder API ==="
+          javap -classpath /tmp/discord-classes.jar -p com.discord.socialsdk.rpc.IDiscordRpcService com.discord.socialsdk.rpc.IDiscordRpcConnection com.discord.socialsdk.rpc.IDiscordRpcCallback || true
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.14.3"

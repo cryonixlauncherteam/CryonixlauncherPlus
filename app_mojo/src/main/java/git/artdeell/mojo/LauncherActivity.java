@@ -247,6 +247,8 @@ public class LauncherActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        // Clear activity on final launcher shutdown; game exit restores launcher status separately.
+        DiscordPresenceManager.stopAndClear();
         super.onDestroy();
         mProgressLayout.cleanUpObservers();
         ProgressKeeper.removeTaskCountListener(mProgressLayout);

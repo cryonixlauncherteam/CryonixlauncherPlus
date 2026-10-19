@@ -211,7 +211,9 @@
 
             <com.kdt.mcgui.MineButton
                 android:id="@+id/play_button"
-                android:layout_width="min(290dp, 48%)"
+                android:layout_width="0dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginEnd="70dp"
                 android:layout_height="52dp"
                 android:background="@drawable/cryonix_lunar_launch_button"
                 android:text="@string/main_play"

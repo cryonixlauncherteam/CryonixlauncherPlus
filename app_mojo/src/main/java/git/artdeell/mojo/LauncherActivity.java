@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.system.Os;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 
+import com.discord.socialsdk.DiscordSocialSdkInit;
 import com.kdt.mcgui.ProgressLayout;
 
 import git.artdeell.mojo.authenticator.accounts.Accounts;
@@ -162,6 +165,22 @@ public class LauncherActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mojo_ui);
+        // Discord Social SDK Android requires the active engine Activity before RPC connects.
+        // Without this, DiscordRpcClient may resolve the service with a null Context.
+        try {
+            DiscordSocialSdkInit.setEngineActivity(this);
+        } catch (Throwable error) {
+            android.util.Log.e("CryonixDiscordPresence", "Discord SDK Activity initialization failed", error);
+        }
+        // Start Discord only after the launcher UI has had time to initialize.
+        // Keep SDK startup out of Application.onCreate() so an SDK issue cannot block cold startup.
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            try {
+                DiscordPresenceManager.start(getApplicationContext());
+            } catch (Throwable error) {
+                android.util.Log.e("CryonixDiscordPresence", "Deferred Rich Presence startup failed", error);
+            }
+        }, 2500L);
         MoJsonDownloader.prepareSubstitutionMap(getAssets());
 
         try {
@@ -228,6 +247,8 @@ public class LauncherActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        // Clear activity on final launcher shutdown; game exit restores launcher status separately.
+        DiscordPresenceManager.stopAndClear();
         super.onDestroy();
         mProgressLayout.cleanUpObservers();
         ProgressKeeper.removeTaskCountListener(mProgressLayout);

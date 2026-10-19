@@ -6,7 +6,9 @@ import static git.artdeell.mojo.Tools.shareLog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -20,7 +22,6 @@ import com.kdt.mcgui.mcVersionSpinner;
 
 import git.artdeell.mojo.CustomControlsActivity;
 import git.artdeell.mojo.R;
-
 import git.artdeell.mojo.Tools;
 import git.artdeell.mojo.contracts.OpenDocumentWithExtension;
 import git.artdeell.mojo.extra.ExtraConstants;
@@ -59,6 +60,17 @@ public class MainMenuFragment extends Fragment {
         Button mPlayButton = view.findViewById(R.id.play_button);
         mVersionSpinner = view.findViewById(R.id.mc_version_spinner);
 
+        // Subtle Motion Bounce feedback; existing click actions remain untouched.
+        attachMotionBounce(mNewsButton);
+        attachMotionBounce(mDiscordButton);
+        attachMotionBounce(mCustomControlButton);
+        attachMotionBounce(mInstallJarButton);
+        attachMotionBounce(mShareLogsButton);
+        attachMotionBounce(mOpenDirectoryButton);
+        attachMotionBounce(mEditProfileButton);
+        attachMotionBounce(mVersionSpinner);
+        attachMotionBounce(mPlayButton);
+
         mNewsButton.setOnClickListener(v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
         mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.social_media_invite)));
         mCustomControlButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
@@ -71,10 +83,39 @@ public class MainMenuFragment extends Fragment {
 
         mOpenDirectoryButton.setOnClickListener((v)-> openGameDirectory(v.getContext()));
 
-
         mNewsButton.setOnLongClickListener((v)->{
             Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
             return true;
+        });
+    }
+
+    private void attachMotionBounce(@NonNull View target) {
+        target.setOnTouchListener((view, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    view.animate().cancel();
+                    view.animate()
+                            .scaleX(0.975f)
+                            .scaleY(0.975f)
+                            .alpha(0.92f)
+                            .setDuration(85L)
+                            .start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    view.animate().cancel();
+                    view.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .alpha(1f)
+                            .setDuration(190L)
+                            .setInterpolator(new OvershootInterpolator(1.15f))
+                            .start();
+                    break;
+                default:
+                    break;
+            }
+            return false;
         });
     }
 

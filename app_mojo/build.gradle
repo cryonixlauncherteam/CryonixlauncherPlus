@@ -5,6 +5,7 @@ plugins {
 }
 
 apply from: rootProject.file('gradle/prefab_bypass.gradle')
+apply from: rootProject.file('gradle/discord_presence_sdk.gradle')
 
 import de.undercouch.gradle.tasks.download.Download
 

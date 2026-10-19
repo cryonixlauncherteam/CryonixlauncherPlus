@@ -1,0 +1,30 @@
+// Extract Discord Social SDK native headers and libraries from the AAR before CMake configures.
+import java.util.zip.ZipFile
+
+def discordAar = new File(project.projectDir, "libs/discord_partner_sdk_arm_only.aar")
+def discordExtractRoot = new File(project.projectDir, "src/main/jni/discord_sdk")
+if (discordAar.isFile()) {
+    def zip = new ZipFile(discordAar)
+    try {
+        zip.entries().each { entry ->
+            def relative = null
+            if (entry.name == "prefab/modules/discord_partner_sdk/include/discordpp.h" ||
+                entry.name == "prefab/modules/discord_partner_sdk/include/cdiscord.h") {
+                relative = "include/" + entry.name.substring(entry.name.lastIndexOf("/") + 1)
+            } else if (entry.name.startsWith("jni/") &&
+                       entry.name.endsWith("/libdiscord_partner_sdk.so")) {
+                def parts = entry.name.split("/")
+                relative = parts[1] + "/libdiscord_partner_sdk.so"
+            }
+            if (relative != null && !entry.directory) {
+                def target = new File(discordExtractRoot, relative)
+                target.parentFile.mkdirs()
+                target.bytes = zip.getInputStream(entry).bytes
+            }
+        }
+    } finally {
+        zip.close()
+    }
+} else {
+    logger.warn("Cryonix Discord SDK AAR not found at ${discordAar}; Rich Presence native bridge will be a no-op.")
+}

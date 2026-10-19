@@ -48,6 +48,17 @@ public final class DiscordPresenceManager {
         sendUpdate(context, "Minecraft Java Edition on Android", "Launcher is ready", System.currentTimeMillis());
     }
 
+    /** Clear the activity when the launcher is actually closing. */
+    public static synchronized void stopAndClear() {
+        try {
+            nativeClear(APPLICATION_ID);
+        } catch (Throwable error) {
+            Log.e(TAG, "Could not clear Discord Rich Presence during shutdown", error);
+        } finally {
+            started = false;
+        }
+    }
+
     private static void sendUpdate(Context context, String details, String state, long startMs) {
         Intent intent = new Intent(context, DiscordPresenceReceiver.class);
         intent.setAction(ACTION_UPDATE);
@@ -75,4 +86,5 @@ public final class DiscordPresenceManager {
 
     private static native void nativeStart(long applicationId, String details, String state, long startTimestampMs);
     private static native void nativeUpdate(long applicationId, String details, String state, long startTimestampMs);
+    private static native void nativeClear(long applicationId);
 }

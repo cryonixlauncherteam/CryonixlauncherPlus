@@ -19,6 +19,7 @@ std::mutex g_mutex;
 Discord_Client g_client{};
 bool g_clientInitialized = false;
 std::atomic<bool> g_callbackPumpStarted{false};
+std::atomic<bool> g_stopCallbackPump{false};
 
 Discord_String stringRef(const std::string& value) {
     return Discord_String{reinterpret_cast<uint8_t*>(const_cast<char*>(value.data())), value.size()};
@@ -32,11 +33,13 @@ void onPresenceUpdated(Discord_ClientResult*, void*) {
 void startCallbackPump() {
     bool expected = false;
     if (!g_callbackPumpStarted.compare_exchange_strong(expected, true)) return;
+    g_stopCallbackPump.store(false);
     std::thread([] {
-        for (;;) {
+        while (!g_stopCallbackPump.load()) {
             Discord_RunCallbacks();
             std::this_thread::sleep_for(std::chrono::milliseconds(16));
         }
+        LOGI("Discord callback pump stopped");
     }).detach();
 }
 
@@ -124,5 +127,28 @@ Java_git_artdeell_mojo_DiscordPresenceManager_nativeUpdate(
 #else
     (void) env; (void) applicationId; (void) details; (void) state; (void) startTimestampMs;
     LOGW("Discord Rich Presence update skipped: SDK library is not bundled for this ABI");
+#endif
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_git_artdeell_mojo_DiscordPresenceManager_nativeClear(
+        JNIEnv*, jclass, jlong applicationId) {
+#ifdef CRYONIX_HAS_DISCORD_SDK
+    {
+        std::lock_guard<std::mutex> lock(g_mutex);
+        if (g_clientInitialized) {
+            Discord_Client_ClearRichPresence(&g_client);
+            LOGI("Discord Rich Presence cleared for app %llu",
+                 static_cast<unsigned long long>(applicationId));
+        }
+    }
+    // Allow the asynchronous clear RPC to be processed before stopping callbacks.
+    std::thread([] {
+        std::this_thread::sleep_for(std::chrono::milliseconds(350));
+        g_stopCallbackPump.store(true);
+    }).detach();
+#else
+    (void) applicationId;
+    LOGW("Discord Rich Presence clear skipped: SDK library is not bundled for this ABI");
 #endif
 }

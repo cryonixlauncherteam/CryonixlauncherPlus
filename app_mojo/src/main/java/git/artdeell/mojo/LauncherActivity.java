@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.system.Os;
 import android.view.View;
 import android.widget.ImageButton;
@@ -162,6 +164,15 @@ public class LauncherActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mojo_ui);
+        // Start Discord only after the launcher UI has had time to initialize.
+        // Keep SDK startup out of Application.onCreate() so an SDK issue cannot block cold startup.
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            try {
+                DiscordPresenceManager.start(getApplicationContext());
+            } catch (Throwable error) {
+                android.util.Log.e("CryonixDiscordPresence", "Deferred Rich Presence startup failed", error);
+            }
+        }, 2500L);
         MoJsonDownloader.prepareSubstitutionMap(getAssets());
 
         try {
